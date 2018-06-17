@@ -1,9 +1,10 @@
 #!/bin/sh
 
+echo "Starting '$0'..."
+
 # This script is based fairly heavily off bateau84/openttd's. Thanks, man!
 savepath="/config/save"
 savegame="${savepath}/${savename}"
-LOADGAME_CHECK="${loadgame}x"
 
 if [ ! -f /config/openttd.cfg ]; then
         # we start the server then kill it quickly to write a config file
@@ -12,7 +13,7 @@ if [ ! -f /config/openttd.cfg ]; then
         timeout -t 3 /usr/local/bin/openttd -D > /dev/null 2>&1
 fi
 
-if [ ${LOADGAME_CHECK} != "x" ]; then
+if [ "${loadgame}x" != "x" ]; then
 
         case ${loadgame} in
                 'true')
@@ -32,7 +33,11 @@ if [ ${LOADGAME_CHECK} != "x" ]; then
                 ;;
                 'last-autosave')
 
-            savegame=${savepath}/autosave/`ls -rt ${savepath}/autosave/ | tail -n1`
+	    latest_savegame="$(ls -1t ${savepath}/autosave/ | head -n1)"
+	    savegame="${savepath}/autosave/${latest_savegame}"
+
+	    echo "Latest autosave found : ${latest_savegame} at $(stat -c '%y' ${savegame})"
+
 
             if [ -r ${savegame} ]; then
                             echo "Loading from autosave - ${savegame}"

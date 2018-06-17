@@ -7,7 +7,7 @@ ARG OPENGFX_VERSION="0.5.4"
 # Get things ready
 RUN mkdir -p /config \
     && mkdir /tmp/build \
-    && useradd -d /config -u 911 -s /bin/false openttd \
+    && useradd -d /config -u 1001 -s /bin/false openttd \
     && chown -R openttd:openttd /config
 
 # Install some build dependencies (we remove these later to save space)
@@ -37,7 +37,7 @@ RUN /tmp/build/configure \
     --personal-dir=/ \
     —-enable-debug
 
-RUN make -j2 \
+RUN make -j4 \
     && make install
 
 ## Install OpenGFX
